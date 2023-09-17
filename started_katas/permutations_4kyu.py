@@ -1,3 +1,6 @@
+from math import factorial
+import time
+
 def permutations(s) -> list:
     def pair_permutations(s: str) -> set:
         """Returns every swap of two chars in string"""
@@ -15,19 +18,33 @@ def permutations(s) -> list:
             list_str[letter_two] = tmp
             return ''.join(list_str)
 
-        pair_permut = {s}
+        pair_permut = set()
         str_len = len(s)
         for i in range(str_len):
             for y in range(i + 1, str_len):
                 pair_permut.add(pair_swap(s, i, y))
 
+        return pair_permut
 
-        result = s
-        return set(result)
+    # print(pair_permutations(s))
 
-    print(pair_permutations(s))
+    permuts = {s}
+    new_permuts = pair_permutations(s)
+    permuts = permuts.union(new_permuts)
+    while len(new_permuts) > 0:
+        roots_permuts = set()
+        for root in new_permuts:
+            roots_permuts = roots_permuts.union(pair_permutations(root))
+        new_permuts = roots_permuts.difference(permuts)
+        permuts = permuts.union(new_permuts)
 
+
+    # print(permuts)
+    print(len(permuts), factorial(len(s)))
     return list(pair_permutations(s))
 
+start = time.time()
+permutations('механиз')
+end = time.time() - start ## собственно время работы программы
 
-permutations('work')
+print(end) ## вывод времени
